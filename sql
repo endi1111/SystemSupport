@@ -5,7 +5,7 @@ USE support_system;
 -- Tables
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
-    role_name VARCHAR(50) UNIQUE NOT NULL,
+    role_name ENUM('Guest', 'Client', 'Agent', 'Agent_Supervisor', 'Admin'),
     role_description TEXT,
     created_at DATETIME NOT NULL, 
     modified_at DATETIME NOT NULL
@@ -79,7 +79,13 @@ CREATE TABLE Ticket (
     category_description TEXT,
     contact_timeframe DATETIME NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    modified_at DATETIME NOT NULL
+    modified_at DATETIME NOT, 
+    FOREIGN KEY (client_id) REFERENCES Users(user_id)
+    FOREIGN KEY (agent_id) REFERENCES Agents(agent_id), --to be modified
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    FOREIGN KEY (status_id) REFERENCES Status(status_id),--to be modified
+    FOREIGN KEY (category_id) REFERENCES Category(category_id),
+    FOREIGN KEY (purchase_id) REFERENCES Purchase(purchase_id)--to be modified
 );
 
 CREATE TABLE Payment (
@@ -89,6 +95,20 @@ CREATE TABLE Payment (
     payment_amount INT NOT NULL,
     payment_status ENUM('in progress', 'declined', 'successful'),
     payment_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    payment_type ENUM('PayPal')
+    payment_type ENUM('PayPal'),
+    FOREIGN KEY (ticket_id) REFERENCES Ticket(ticket_id),
+    FOREIGN KEY (product_id) REFERENCES Product(product_id) 
 );
--- Add other tables (Agents, Tickets, Products, etc.) here...
+
+CREATE TABLE Purchase (
+    purchase_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+);
+
+CREATE TABLE Escalations (
+    escalation_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+);
+
+CREATE TABLE Updates (
+    update_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+);
+-- Modify Tables
