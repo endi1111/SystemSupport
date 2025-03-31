@@ -11,6 +11,8 @@ CREATE TABLE Roles (
     modified_at DATETIME NOT NULL
 );
 
+
+
 CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
     username VARCHAR(50) UNIQUE,
