@@ -6,7 +6,9 @@ USE support_system;
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
     role_name VARCHAR(50) UNIQUE NOT NULL,
-    description TEXT
+    role_description TEXT,
+    created_at DATETIME NOT NULL, 
+    modified_at DATETIME NOT NULL
 );
 
 CREATE TABLE Users (
@@ -16,12 +18,77 @@ CREATE TABLE Users (
     email VARCHAR(100) UNIQUE NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    phone VARCHAR(20),
+    phone_number VARCHAR(20),
     role_id INT NOT NULL,
-    external_client_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (role_id) REFERENCES Roles(role_id)
 );
 
+CREATE TABLE Agents (
+    agent_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    user_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    supervisor_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    max_tickets INT DEFAULT 7,
+    current_tickets INT DEFAULT 0,
+    hiring_date DATETIME NOT NULL, 
+    contract_type ENUM(),
+    FOREIGN KEY (supervisor_id) REFERENCES Agents(agent_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)--to be modified
+);
+
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    product_name VARCHAR(50) NOT NULL,
+    product_description TEXT,
+    category_product ENUM('PC', 'Smartphone', 'Accessories', 'Appliances')
+    weight_product, 
+    warranty_months INT NOT NULL,
+    purchase_link,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME NOT NULL
+);
+
+CREATE TABLE Status (
+    status_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    status_name VARCHAR(50) NOT NULL,
+    status_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME NOT NULL
+);
+
+CREATE TABLE Category_Ticket (
+    category_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    category_name VARCHAR(50) NOT NULL,
+    category_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME NOT NULL
+);
+
+CREATE TABLE Ticket (
+    ticket_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    client_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    agent_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    product_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    status_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    category_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    purchase_id INT PRIMARY KEY AUTO_INCREMENT, --to be modified
+    is_urgent BOOLEAN DEFAULT NO,
+    issue_details TEXT NOT NULL,
+    category_description TEXT,
+    contact_timeframe DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME NOT NULL
+);
+
+CREATE TABLE Payment (
+    payment_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    ticket_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, --to be modified
+    product_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, -- to be modified
+    payment_amount INT NOT NULL,
+    payment_status ENUM('in progress', 'declined', 'successful'),
+    payment_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    payment_type ENUM('PayPal')
+);
 -- Add other tables (Agents, Tickets, Products, etc.) here...
